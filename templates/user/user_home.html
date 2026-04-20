@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lefto | User Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Lefto Aesthetic Brown Theme Colors */
+            --bg-main: #FDFBF8;        
+            --primary-brown: #8A5A44;  
+            --text-dark: #3E2723;      
+            --text-light: #7A6960;     
+            --white: #FFFFFF;
+            
+            /* Glassmorphism Variables */
+            --glass-bg: rgba(255, 255, 255, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.6);
+            --glass-shadow: 0 8px 32px 0 rgba(138, 90, 68, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            /* Soft gradient base */
+            background: linear-gradient(135deg, #FDFBF8 0%, #F4EFEB 50%, #EAE0D5 100%);
+            color: var(--text-dark);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* --- Animated Background Blobs for Glass Effect --- */
+        .blob-1, .blob-2 {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(70px);
+            z-index: -1;
+            opacity: 0.5;
+            animation: floatBlob 15s ease-in-out infinite;
+        }
+
+        .blob-1 {
+            top: -50px; left: -50px;
+            width: 350px; height: 350px;
+            background: #8A5A44; 
+        }
+
+        .blob-2 {
+            bottom: -100px; right: -50px;
+            width: 450px; height: 450px;
+            background: #D5B4A3; 
+            animation-delay: -7s;
+            animation-direction: reverse;
+        }
+
+        @keyframes floatBlob {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(40px, -40px) scale(1.1); }
+            66% { transform: translate(-30px, 30px) scale(0.9); }
+        }
+
+        /* --- Slide Animations --- */
+        @keyframes slideInUp {
+            0% { opacity: 0; transform: translateY(40px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-up {
+            opacity: 0;
+            animation: slideInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+
+        /* --- Reusable Glass Class --- */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+        }
+
+        /* --- Top Navigation --- */
+        .navbar {
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+            animation: slideInUp 0.6s ease-out forwards;
+        }
+
+        .brand-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-brown);
+            letter-spacing: -0.5px;
+            text-decoration: none;
+        }
+
+        .logout-btn {
+            padding: 8px 18px;
+            background-color: rgba(255, 255, 255, 0.6);
+            color: var(--text-dark);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background-color: var(--primary-brown);
+            color: var(--white);
+            border-color: var(--primary-brown);
+            transform: translateY(-2px);
+        }
+
+        /* --- Main Dashboard Container --- */
+        .dashboard-wrapper {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 50px 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .header-section {
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .header-section h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--primary-brown);
+        }
+
+        .header-section p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-light);
+            margin-bottom: 20px;
+            margin-top: 40px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::after {
+            content: '';
+            height: 1px;
+            flex-grow: 1;
+            background-color: rgba(138, 90, 68, 0.2);
+        }
+
+        /* --- Action Cards Grid --- */
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .action-card {
+            border-radius: 20px;
+            padding: 25px;
+            text-decoration: none;
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.8);
+            border-color: rgba(255, 255, 255, 1);
+            box-shadow: 0 15px 40px rgba(138, 90, 68, 0.15);
+        }
+
+        .action-icon {
+            background-color: rgba(255, 255, 255, 0.6);
+            width: 50px;
+            height: 50px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-brown);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .action-icon svg {
+            width: 24px;
+            height: 24px;
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: transform 0.4s ease;
+        }
+
+        .action-card:hover .action-icon {
+            background-color: var(--primary-brown);
+            color: var(--white);
+            border-radius: 18px; 
+            border-color: var(--primary-brown);
+        }
+
+        .action-card:hover .action-icon svg {
+            transform: scale(1.15);
+        }
+
+        .action-content h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+            transition: color 0.3s ease;
+        }
+
+        .action-card:hover .action-content h3 {
+            color: var(--primary-brown);
+        }
+
+        .action-content p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            line-height: 1.4;
+        }
+
+        @media (max-width: 768px) {
+            .navbar { padding: 15px 20px; }
+            .dashboard-wrapper { padding: 30px 20px; }
+            .header-section h1 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="blob-1"></div>
+    <div class="blob-2"></div>
+
+    <nav class="navbar glass-panel">
+        <a href="#" class="brand-logo">Lefto.</a>
+        <a href="/myapp/login_get/" class="logout-btn">Log out</a>
+    </nav>
+
+    <div class="dashboard-wrapper">
+        
+        <header class="header-section slide-up">
+            <h1>Welcome, User!</h1>
+            <p>What are you hungry for today?</p>
+        </header>
+
+        <h2 class="section-title slide-up delay-1">Food & Orders</h2>
+        <div class="actions-grid">
+            
+            <a href="/myapp/view_leftover_food_request" class="action-card glass-panel slide-up delay-1">
+                <div class="action-icon">
+                    <svg viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+                </div>
+                <div class="action-content">
+                    <h3>Browse Lefto Deals</h3>
+                    <p>Rescue delicious, discounted leftover food from premium hotels near you.</p>
+                </div>
+            </a>
+
+            <a href="/myapp/view_leftover_order_status" class="action-card glass-panel slide-up delay-1">
+                <div class="action-icon">
+                    <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                </div>
+                <div class="action-content">
+                    <h3>Lefto Deal Status</h3>
+                    <p>Check if the hotel has confirmed your discounted surplus food claim.</p>
+                </div>
+            </a>
+
+            <a href="/myapp/user_view_food_items/" class="action-card glass-panel slide-up delay-2">
+                <div class="action-icon">
+                    <svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>
+                </div>
+                <div class="action-content">
+                    <h3>Standard Menu</h3>
+                    <p>Browse and order fresh, regular-priced meals directly from our partners.</p>
+                </div>
+            </a>
+
+            <a href="/myapp/view_order_status" class="action-card glass-panel slide-up delay-2">
+                <div class="action-icon">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                </div>
+                <div class="action-content">
+                    <h3>Standard Order Status</h3>
+                    <p>Track the preparation and approval of your regular menu food orders.</p>
+                </div>
+            </a>
+
+        </div>
+
+        <h2 class="section-title slide-up delay-3">Account & Support</h2>
+        <div class="actions-grid">
+
+            <a href="/myapp/update_profile" class="action-card glass-panel slide-up delay-3">
+                <div class="action-icon">
+                    <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                </div>
+                <div class="action-content">
+                    <h3>Update Profile</h3>
+                    <p>Manage your personal details, contact information, and delivery address.</p>
+                </div>
+            </a>
+
+            <a href="/myapp/change_password" class="action-card glass-panel slide-up delay-3">
+                <div class="action-icon">
+                    <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                </div>
+                <div class="action-content">
+                    <h3>Security Settings</h3>
+                    <p>Change your password to keep your Lefto account safe and secure.</p>
+                </div>
+            </a>
+
+            <a href="/myapp/view_reply" class="action-card glass-panel slide-up delay-4">
+                <div class="action-icon">
+                    <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                </div>
+                <div class="action-content">
+                    <h3>Support Inbox</h3>
+                    <p>Report an issue with your food or hotel experience to our support team.</p>
+                </div>
+            </a>
+
+         
+
+        </div>
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lefto | Verify Hotel Partners</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Lefto Aesthetic Brown Light Theme */
+            --bg-main: #FDFBF8;
+            --bg-secondary: #F4EFEB;
+            --primary-brown: #8A5A44;
+            --text-dark: #3E2723;
+            --text-light: #7A6960;
+            --white: #FFFFFF;
+            --border-color: #EAE0D5;
+            
+            /* Action Button Colors */
+            --success: #388E3C;
+            --success-bg: #E8F5E9;
+            --danger: #D32F2F;
+            --danger-bg: #FFEBEE;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-dark);
+            min-height: 100vh;
+        }
+
+        /* --- Top Navigation --- */
+        .navbar {
+            background-color: var(--white);
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-brown);
+            text-decoration: none;
+        }
+
+        .back-btn {
+            padding: 8px 16px;
+            background-color: transparent;
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--text-light);
+        }
+
+        /* --- Main Content Area --- */
+        .content-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 40px 20px;
+        }
+
+        .page-header {
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .page-header h2 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            color: var(--primary-brown);
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            color: var(--text-light);
+            font-size: 1.05rem;
+        }
+
+        /* --- Card Grid Layout --- */
+        .hotel-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        /* --- Individual Hotel Card --- */
+        .hotel-card {
+            background: var(--white);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 8px 25px rgba(138, 90, 68, 0.04);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .hotel-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 35px rgba(138, 90, 68, 0.08);
+        }
+
+        /* Card Header (Logo & Name) */
+        .card-header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 1px solid var(--border-color);
+            background-color: var(--bg-main);
+        }
+
+        .hotel-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--white);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .hotel-title h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .hotel-title .status-badge {
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Dynamic Badge Colors */
+        .badge-pending { background-color: #FFF3E0; color: #F57C00; }
+        .badge-accepted { background-color: var(--success-bg); color: var(--success); }
+        .badge-rejected { background-color: var(--danger-bg); color: var(--danger); }
+
+        /* Card Body (Details & Proof) */
+        .card-body {
+            padding: 20px;
+            flex-grow: 1;
+        }
+
+        .info-row {
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-row span {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .proof-container {
+            margin-top: 15px;
+        }
+
+        .proof-container span {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .proof-img {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Card Footer (Actions) */
+        .card-footer {
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+            background-color: var(--bg-main);
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-accept {
+            background-color: var(--success-bg);
+            color: var(--success);
+            border: 1px solid rgba(56, 142, 60, 0.2);
+        }
+
+        .btn-accept:hover {
+            background-color: var(--success);
+            color: var(--white);
+        }
+
+        .btn-reject {
+            background-color: var(--danger-bg);
+            color: var(--danger);
+            border: 1px solid rgba(211, 47, 47, 0.2);
+        }
+
+        .btn-reject:hover {
+            background-color: var(--danger);
+            color: var(--white);
+        }
+
+        .status-message {
+            width: 100%;
+            text-align: center;
+            font-weight: 600;
+            color: var(--text-light);
+            font-size: 0.95rem;
+            padding: 10px 0;
+        }
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="/myapp/admin_dashboard/" class="brand-logo">Lefto. Admin</a>
+        <a href="/myapp/admin_dashboard/" class="back-btn">← Back to Dashboard</a>
+    </nav>
+
+    <div class="content-wrapper">
+        
+        <div class="page-header">
+            <h2>Verify Hotel Partners</h2>
+            <p>Review registration requests and official proof documents.</p>
+        </div>
+
+        <div class="hotel-grid">
+            
+            {% for i in data %}
+            
+            <div class="hotel-card">
+                
+                <div class="card-header">
+                    {% if i.logo %}
+                        <img src="{{ i.logo.url }}" alt="Logo" class="hotel-logo">
+                    {% else %}
+                        <div class="hotel-logo" style="background: var(--border-color); display:flex; align-items:center; justify-content:center;">Hotel</div>
+                    {% endif %}
+                    
+                    <div class="hotel-title">
+                        <h3>{{ i.name }}</h3>
+                        <span class="status-badge badge-{{ i.status|default:'pending'|lower }}">
+                            {{ i.status|default:'Pending'|title }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="info-row">
+                        <span>Email</span>
+                        {{ i.email }}
+                    </div>
+                    <div class="info-row">
+                        <span>Phone</span>
+                        {{ i.phone }}
+                    </div>
+                    <div class="info-row">
+                        <span>Address</span>
+                        {{ i.address }}
+                    </div>
+                    
+                    <div class="proof-container">
+                        <span>Official Proof Document</span>
+                        {% if i.proof %}
+                            <img src="{{ i.proof.url }}" alt="Verification Proof" class="proof-img">
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    {% if i.status == 'pending' or not i.status %}
+                        <a href="/myapp/accept_hotel/{{ i.id }}/" class="btn btn-accept">Accept</a>
+                        <a href="/myapp/reject_hotel/{{ i.id }}/" class="btn btn-reject">Reject</a>
+                    {% else %}
+                        <div class="status-message">
+                            Registration {{ i.status|title }}
+                        </div>
+                    {% endif %}
+                </div>
+                
+            </div>
+            
+            {% endfor %}
+            </div>
+    </div>
+
+</body>
+</html>

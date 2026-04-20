@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lefto | User Registration</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Aesthetic Brown Light Theme Colors */
+            --bg-light: #F9F6F0;
+            --primary-brown: #8A5A44;
+            --hover-brown: #6A4432;
+            --text-dark: #3E2723;
+            --text-light: #7A6960;
+            --white-card: #FFFFFF;
+            --error-color: #D32F2F;
+            --success-color: #388E3C;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* --- Layout --- */
+        .split-container {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        /* Left Side: Image */
+        .image-section {
+            flex: 1;
+            /* Aesthetic dining/food image */
+            background: url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=1600&auto=format&fit=crop') center/cover no-repeat;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            padding: 40px;
+        }
+
+        .image-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(to bottom, rgba(62, 39, 35, 0.2), rgba(62, 39, 35, 0.8));
+        }
+
+        .brand-text {
+            position: relative;
+            z-index: 2;
+            color: white;
+            max-width: 450px;
+        }
+
+        .brand-text h1 {
+            font-size: 3.5rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .brand-text p {
+            font-size: 1.1rem;
+            font-weight: 300;
+            line-height: 1.5;
+            opacity: 0.9;
+        }
+
+        /* Right Side: Form */
+        .form-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            background-color: var(--bg-light);
+            overflow-y: auto; /* Allows scrolling if form gets too long on small screens */
+        }
+
+        .register-box {
+            width: 100%;
+            max-width: 550px; /* Slightly wider for the 2-column grid */
+            background: var(--white-card);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(138, 90, 68, 0.08);
+        }
+
+        .register-box h2 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+        }
+
+        .register-box p.subtitle {
+            color: var(--text-light);
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+        }
+
+        /* Form Grid Layout */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .full-width {
+            grid-column: span 2;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            background-color: #FDFBF8;
+            border: 1px solid #E6DCD1;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        /* Custom File Input Styling */
+        .input-group input[type="file"] {
+            padding: 9px;
+            border: 1px dashed var(--primary-brown);
+            background: transparent;
+            cursor: pointer;
+        }
+
+        .input-group input[type="file"]::file-selector-button {
+            background: var(--primary-brown);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-right: 10px;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+
+        .input-group input[type="file"]::file-selector-button:hover {
+            background: var(--hover-brown);
+        }
+
+        /* --- Live Validation Styling --- */
+        .input-group input:focus {
+            border-color: var(--primary-brown);
+            box-shadow: 0 0 0 3px rgba(138, 90, 68, 0.1);
+        }
+
+        /* Show red border if data is entered but invalid */
+        .input-group input:not(:placeholder-shown):not(:focus):invalid {
+            border-color: var(--error-color);
+            background-color: #FFEBEE;
+        }
+
+        /* Show green border if data is correctly entered */
+        .input-group input:not(:placeholder-shown):valid {
+            border-color: var(--success-color);
+        }
+
+        /* Button */
+        .register-box button {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary-brown);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.1s ease;
+        }
+
+        .register-box button:hover {
+            background: var(--hover-brown);
+        }
+
+        .register-box button:active {
+            transform: scale(0.98);
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+
+        .login-link a {
+            color: var(--primary-brown);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive Mobile View */
+        @media (max-width: 768px) {
+            .split-container {
+                flex-direction: column;
+            }
+            .image-section {
+                flex: none;
+                height: 25vh;
+                padding: 20px;
+            }
+            .brand-text h1 { font-size: 2rem; }
+            .form-section {
+                flex: none;
+                padding: 20px;
+            }
+            .register-box {
+                padding: 25px 20px;
+                box-shadow: none;
+                background: transparent;
+            }
+            .form-grid {
+                grid-template-columns: 1fr; /* Stack columns on mobile */
+            }
+            .full-width {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="split-container">
+    
+    <div class="image-section">
+        <div class="image-overlay"></div>
+        <div class="brand-text">
+            <h1>Join Lefto.</h1>
+            <p>Create an account to start claiming exclusive discounts on premium hotel meals before they're gone.</p>
+        </div>
+    </div>
+
+    <div class="form-section">
+        <div class="register-box">
+            <h2>Create Account</h2>
+            <p class="subtitle">Fill in your details to get started.</p>
+
+            <form action="/myapp/user_register_post/" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label>Full Name</label>
+                        <input type="text" name="name" placeholder="John Doe" pattern="[A-Za-z\s]+" title="Please enter only letters." required>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Username</label>
+                        <input type="text" name="username" placeholder="johndoe123" minlength="4" title="Username must be at least 4 characters long." required>
+                    </div>
+                    
+                    <div class="input-group full-width">
+                        <label>Email Address</label>
+                        <input type="email" name="email" placeholder="john@example.com" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Phone Number</label>
+                        <input type="tel" name="phone" placeholder="1234567890" pattern="[0-9]{10}" title="Please enter exactly 10 digits." required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Password</label>
+                        <input type="password" name="password" placeholder="••••••••" minlength="8" title="Password must be at least 8 characters long." required>
+                    </div>
+
+                    <div class="input-group full-width">
+                        <label>Address</label>
+                        <input type="text" name="address" placeholder="123 Street Name, City" required>
+                    </div>
+
+                    <div class="input-group full-width">
+                        <label>Profile Photo</label>
+                        <input type="file" name="photo" accept="image/*" required>
+                    </div>
+                </div>
+
+                <button type="submit">Complete Registration</button>
+            </form>
+
+            <div class="login-link">
+                Already have an account? <a href="/myapp/login/">Log in here</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

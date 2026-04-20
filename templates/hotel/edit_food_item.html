@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lefto | Post Leftover Deals</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Lefto Aesthetic Brown Light Theme Colors */
+            --bg-main: #FDFBF8;
+            --bg-secondary: #F4EFEB;
+            --primary-brown: #8A5A44;
+            --hover-brown: #6A4432;
+            --text-dark: #3E2723;
+            --text-light: #7A6960;
+            --white: #FFFFFF;
+            --border-color: #EAE0D5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- Top Navigation (Matches Dashboard) --- */
+        .navbar {
+            background-color: var(--white);
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .brand-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-brown);
+            text-decoration: none;
+        }
+
+        .back-btn {
+            padding: 8px 16px;
+            background-color: transparent;
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--text-light);
+        }
+
+        /* --- Main Form Container --- */
+        .form-wrapper {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .form-card {
+            background: var(--white);
+            width: 100%;
+            max-width: 550px;
+            padding: 40px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(138, 90, 68, 0.05);
+        }
+
+        .form-header {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .form-header h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--primary-brown);
+            margin-bottom: 8px;
+        }
+
+        .form-header p {
+            font-size: 0.95rem;
+            color: var(--text-light);
+        }
+
+        /* --- Form Inputs --- */
+        .input-group {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .input-group input[type="text"],
+        .input-group input[type="number"],
+        .input-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            background-color: var(--bg-main);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 1rem;
+            color: var(--text-dark);
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .input-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .input-group input:focus,
+        .input-group textarea:focus {
+            border-color: var(--primary-brown);
+            box-shadow: 0 0 0 3px rgba(138, 90, 68, 0.1);
+        }
+
+        /* Side-by-side grid for Price and Quantity */
+        .row-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        /* Custom File Input */
+        .file-upload-box {
+            border: 2px dashed var(--border-color);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            background-color: var(--bg-main);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .file-upload-box:hover {
+            border-color: var(--primary-brown);
+            background-color: var(--bg-secondary);
+        }
+
+        .file-upload-box input[type="file"] {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-upload-text {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .file-upload-text span {
+            color: var(--primary-brown);
+            text-decoration: underline;
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--primary-brown);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.3s ease, transform 0.1s ease;
+        }
+
+        .submit-btn:hover {
+            background: var(--hover-brown);
+        }
+
+        .submit-btn:active {
+            transform: scale(0.98);
+        }
+
+        @media (max-width: 600px) {
+            .row-grid {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .form-card {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="/myapp/hotel_home/" class="brand-logo">Lefto.</a>
+        <a href="/myapp/hotel_home/" class="back-btn">← Back to Dashboard</a>
+    </nav>
+
+    <div class="form-wrapper">
+        <div class="form-card">
+            
+            <div class="form-header">
+                <h2>Edit Food Items</h2>
+                <p>List your perfectly good surplus food at a discount.</p>
+            </div>
+
+            <form action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="input-group">
+                    <label>Food Item Name</label>
+                    <input type="text" name="name" placeholder="e.g., Buffet Pasta Tray, Assorted Pastries" value="{{data.name}}" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Details</label>
+                    <textarea name="details" placeholder="Briefly describe the food (e.g., Prepared at 8 PM, contains dairy...)" value="" required>{{data.details}}</textarea>
+                </div>
+
+                <div class="row-grid">
+                    <div class="input-group">
+                        <label> Price (₹)</label>
+                        <input type="number" name="price" placeholder="0.00" min="0" step="0.01" value="{{data.price}}" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Quantity Available</label>
+                        <input type="number" name="quantity" placeholder="1" min="1" value="{{data.quantity}}" required>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Current Image</label><br>
+                    <img src="{{data.image.url}}" alt="Current Food Image" style="width: 150px; height: auto; border-radius: 8px; margin-bottom: 15px;">
+                </div>
+                <div class="input-group">
+                    <label>Food Image</label>
+                    <div class="file-upload-box">
+                        <input type="file" name="image" accept="image/*" >
+                        <div class="file-upload-text">
+                            <span>Click to upload</span> or drag and drop<br>
+                            <small>JPEG, PNG up to 5MB</small>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" name="add" class="submit-btn">Update Deal</button>
+            </form>
+
+        </div>
+    </div>
+
+</body>
+</html>

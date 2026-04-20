@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lefto | Manage Leftover Deals</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Lefto Aesthetic Brown Light Theme Colors */
+            --bg-main: #FDFBF8;
+            --bg-secondary: #F4EFEB;
+            --primary-brown: #8A5A44;
+            --hover-brown: #6A4432;
+            --text-dark: #3E2723;
+            --text-light: #7A6960;
+            --white: #FFFFFF;
+            --border-color: #EAE0D5;
+            --danger: #D32F2F;
+            --danger-bg: #FFEBEE;
+            --success: #388E3C;
+            --success-bg: #E8F5E9;
+            --warning: #F57C00;
+            --warning-bg: #FFF3E0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- Top Navigation --- */
+        .navbar {
+            background-color: var(--white);
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .brand-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-brown);
+            text-decoration: none;
+        }
+
+        .back-btn {
+            padding: 8px 16px;
+            background-color: transparent;
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--text-light);
+        }
+
+        /* --- Main Content Area --- */
+        .content-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 40px 20px;
+        }
+
+        /* Page Header & Add Button */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 30px;
+        }
+
+        .header-text h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--primary-brown);
+            margin-bottom: 5px;
+        }
+
+        .header-text p {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .btn-add {
+            background-color: var(--primary-brown);
+            color: var(--white);
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(138, 90, 68, 0.2);
+        }
+
+        .btn-add:hover {
+            background-color: var(--hover-brown);
+            transform: translateY(-2px);
+        }
+
+        /* --- Modern Data Table --- */
+        .table-container {
+            background: var(--white);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 15px rgba(138, 90, 68, 0.03);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        thead {
+            background-color: var(--bg-secondary);
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        th {
+            padding: 16px 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            vertical-align: middle;
+        }
+
+        tbody tr:hover {
+            background-color: #FAFAF8;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Image Thumbnail */
+        .food-thumb {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Highlighted Discount Price */
+        .discount-price {
+            font-weight: 700;
+            color: var(--primary-brown);
+            font-size: 1.05rem;
+        }
+
+        /* Status Badges */
+        .badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .badge-active {
+            background-color: var(--success-bg);
+            color: var(--success);
+        }
+
+        .badge-expired {
+            background-color: var(--warning-bg);
+            color: var(--warning);
+        }
+
+        /* Action Buttons */
+        .action-links {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-action {
+            padding: 6px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .btn-edit {
+            background-color: var(--bg-secondary);
+            color: var(--primary-brown);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-edit:hover {
+            background-color: var(--primary-brown);
+            color: var(--white);
+        }
+
+        .btn-delete {
+            background-color: var(--danger-bg);
+            color: var(--danger);
+            border: 1px solid rgba(211, 47, 47, 0.2);
+        }
+
+        .btn-delete:hover {
+            background-color: var(--danger);
+            color: var(--white);
+        }
+
+        @media (max-width: 768px) {
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="/myapp/hotel_home/" class="brand-logo">Lefto.</a>
+        <a href="/myapp/hotel_home/" class="back-btn">← Back to Dashboard</a>
+    </nav>
+
+    <div class="content-wrapper">
+        
+        <div class="page-header">
+            <div class="header-text">
+                <h2>Manage Leftover Deals</h2>
+                <p>View, update, or remove your currently listed discounted food packages.</p>
+            </div>
+            <a href="/myapp/add_leftover_food/" class="btn-add">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                Post New Deal
+            </a>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Details</th>
+                        <th>Qty</th>
+                        <th>Discount Price</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    {% for item in data %}
+                    
+                    <tr>
+                        <td>
+                            <img src="{{ item.FOOD.image.url }}" alt="Food Image" class="food-thumb">
+                        </td>
+                        <td><strong>{{ item.FOOD.name }}</strong></td>
+                        <td>{{ item.FOOD.details }}</td>
+                        <td>{{ item.FOOD.quantity }}</td>
+                        <td class="discount-price">₹{{ item.discountprice }}</td>
+                        <td>
+                            <span class="badge badge-active">Available</span>
+                        </td>
+                        <td class="action-links">
+                            <a href="#" class="btn-action btn-edit">Edit</a>
+                            <a href="#" class="btn-action btn-delete">Delete</a>
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+                    
+                    </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</body>
+</html>

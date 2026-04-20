@@ -1,0 +1,347 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lefto | Leftover Deal Status</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Lefto Aesthetic Brown Theme Colors */
+            --bg-main: #FDFBF8;        
+            --primary-brown: #8A5A44;  
+            --hover-brown: #6A4432;
+            --text-dark: #3E2723;      
+            --text-light: #7A6960;     
+            --white: #FFFFFF;
+            
+            /* Status Colors */
+            --success: #388E3C;
+            --success-bg: rgba(76, 175, 80, 0.15);
+            --warning: #F57C00;
+            --warning-bg: rgba(255, 152, 0, 0.15);
+            --info: #0288D1;
+            --info-bg: rgba(2, 136, 209, 0.15);
+            
+            /* Glassmorphism Variables */
+            --glass-bg: rgba(255, 255, 255, 0.55);
+            --glass-border: rgba(255, 255, 255, 0.7);
+            --glass-shadow: 0 8px 32px 0 rgba(138, 90, 68, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #FDFBF8 0%, #F4EFEB 50%, #EAE0D5 100%);
+            color: var(--text-dark);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- Animated Background Blobs --- */
+        .blob-1, .blob-2 {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(70px);
+            z-index: -1;
+            opacity: 0.5;
+            animation: floatBlob 15s ease-in-out infinite;
+        }
+
+        .blob-1 { top: 50px; left: -50px; width: 350px; height: 350px; background: #8A5A44; }
+        .blob-2 { bottom: -50px; right: -50px; width: 450px; height: 450px; background: #D5B4A3; animation-delay: -5s; animation-direction: reverse; }
+
+        @keyframes floatBlob {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -40px) scale(1.1); }
+            66% { transform: translate(-20px, 30px) scale(0.9); }
+        }
+
+        /* --- Animations --- */
+        @keyframes slideInUp {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-up {
+            opacity: 0;
+            animation: slideInUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+        
+        .delay-1 { animation-delay: 0.1s; }
+
+        /* --- Reusable Glass Class --- */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+        }
+
+        /* --- Top Navigation --- */
+        .navbar {
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+        }
+
+        .brand-logo { font-size: 1.5rem; font-weight: 700; color: var(--primary-brown); text-decoration: none; }
+        .back-btn { padding: 8px 16px; background-color: transparent; color: var(--text-dark); border: 1px solid var(--border-color); border-radius: 6px; text-decoration: none; font-weight: 500; font-size: 0.9rem; transition: all 0.2s ease; }
+        .back-btn:hover { background-color: rgba(255, 255, 255, 0.5); }
+
+        /* --- Main Content Area --- */
+        .content-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .page-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .page-header h2 { font-size: 2.2rem; font-weight: 700; color: var(--primary-brown); margin-bottom: 8px; }
+        .page-header p { color: var(--text-light); font-size: 1.05rem; }
+
+        /* --- Order List Stack --- */
+        .order-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* --- Horizontal Order Card --- */
+        .order-card {
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background-color: rgba(255, 255, 255, 0.65);
+        }
+
+        .order-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(138, 90, 68, 0.12);
+            background-color: rgba(255, 255, 255, 0.85);
+        }
+
+        /* Food Thumbnail (navigating relationships: order -> leftover_food -> food -> image) */
+        .order-image {
+            width: 90px;
+            height: 90px;
+            border-radius: 12px;
+            object-fit: cover;
+            border: 2px solid var(--white);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            flex-shrink: 0; 
+        }
+
+        /* Order Info */
+        .order-info {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .order-title { font-size: 1.25rem; font-weight: 600; color: var(--text-dark); margin-bottom: 4px; }
+        
+        .hotel-name { font-size: 0.85rem; color: var(--text-light); text-transform: uppercase; font-weight: 600; margin-bottom: 8px; }
+
+        .order-meta {
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .calc-pill {
+            background-color: rgba(255,255,255,0.8);
+            padding: 4px 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        /* Status & Action Area */
+        .status-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 10px;
+            flex-shrink: 0;
+            min-width: 180px;
+        }
+
+        .order-date { font-size: 0.8rem; color: var(--text-light); font-weight: 500; }
+
+        /* Status UI Elements */
+        .status-waiting {
+            background-color: var(--warning-bg);
+            color: var(--warning);
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-align: center;
+            width: 100%;
+        }
+
+        .btn-pay {
+            background-color: var(--success);
+            color: var(--white);
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-align: center;
+            width: 100%;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 10px rgba(76, 175, 80, 0.2);
+            animation: pulseBtn 2s infinite;
+        }
+
+        .btn-pay:hover { background-color: #2E7D32; transform: translateY(-2px); }
+
+        @keyframes pulseBtn {
+            0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(76, 175, 80, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
+        }
+
+        .status-paid {
+            background-color: var(--info-bg);
+            color: var(--info);
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-align: center;
+            width: 100%;
+        }
+
+        /* Empty State */
+        .empty-state { text-align: center; padding: 50px 20px; color: var(--text-light); }
+        .empty-state h3 { font-size: 1.5rem; color: var(--text-dark); margin-bottom: 10px; }
+
+        @media (max-width: 600px) {
+            .order-card { flex-direction: column; align-items: flex-start; }
+            .status-container { width: 100%; align-items: flex-start; margin-top: 10px; }
+            .order-image { width: 100%; height: 160px; margin-bottom: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="blob-1"></div>
+    <div class="blob-2"></div>
+
+    <nav class="navbar glass-panel">
+        <a href="/myapp/user_dashboard/" class="brand-logo">Lefto.</a>
+        <a href="javascript:history.back()" class="back-btn">← Back</a>
+    </nav>
+
+    <div class="content-wrapper">
+        
+        <header class="page-header slide-up">
+            <h2>Lefto Deals History</h2>
+            <p>Track the status of your claimed leftover food.</p>
+        </header>
+
+        <div class="order-list">
+            
+            {% for i in data %}
+            
+            <div class="order-card glass-panel slide-up delay-{{ forloop.counter|default:'1' }}">
+                
+                {% if i.LEFT.FOOD.image %}
+                    <img src="{{ i.LEFT.FOOD.image.url }}" alt="{{ i.LEFT.FOOD.name }}" class="order-image">
+                {% else %}
+                    <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=300" alt="Placeholder" class="order-image">
+                {% endif %}
+
+                <div class="order-info">
+                    <div class="hotel-name">{{ i.LEFT.FOOD.HOTEL.name }}</div>
+                    <h3 class="order-title">{{ i.LEFT.FOOD.name }}</h3>
+                    
+                    <div class="order-meta">
+                        <strong>Qty Claimed:</strong> {{ i.quantity }}
+                        <span style="color:var(--border-color)">|</span>
+                        <strong>Deal Price:</strong> ₹{{ i.LEFT.discountprice }}
+                    </div>
+
+                    <div class="calc-pill">
+                        Total: ({{ i.quantity }} x ₹{{ i.LEFT.discountprice }})
+                    </div>
+                </div>
+
+                <div class="status-container">
+                    <span class="order-date">Ordered: {{ i.date }}</span>
+
+                    {% if i.status == 'ordered' %}
+                        <div class="status-waiting">
+                            ⏳ Waiting for Dispatch Confirmation
+                        </div>
+                        
+                    {% elif i.status == 'confirmed' %}
+                        <a href="/myapp/payment_page/{{ i.id }}/" class="btn-pay">
+                            💳 Pay Now
+                        </a>
+                        
+                    {% elif i.status == 'paid' %}
+                        <div class="status-paid">
+                            ✓ Payment Completed (History)
+                        </div>
+                    
+                    {% else %}
+                        <div class="status-waiting" style="background:var(--danger-bg); color:var(--danger)">
+                            {{ i.status|title }}
+                        </div>
+                    {% endif %}
+                </div>
+
+            </div>
+
+            {% empty %}
+            <div class="empty-state glass-panel slide-up delay-1">
+                <h3>No Lefto deals claimed yet!</h3>
+                <p>You haven't requested any discounted food. Check the menu to save money and reduce waste.</p>
+            </div>
+            
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</body>
+</html>

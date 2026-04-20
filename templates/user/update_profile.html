@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lefto | Update Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Lefto Aesthetic Brown Theme Colors */
+            --bg-main: #FDFBF8;        
+            --primary-brown: #8A5A44;  
+            --hover-brown: #6A4432;
+            --text-dark: #3E2723;      
+            --text-light: #7A6960;     
+            --white: #FFFFFF;
+            --border-color: #EAE0D5;
+            
+            /* Glassmorphism Variables */
+            --glass-bg: rgba(255, 255, 255, 0.55);
+            --glass-border: rgba(255, 255, 255, 0.7);
+            --glass-shadow: 0 8px 32px 0 rgba(138, 90, 68, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #FDFBF8 0%, #F4EFEB 50%, #EAE0D5 100%);
+            color: var(--text-dark);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- Animated Background Blobs --- */
+        .blob-1, .blob-2 {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(70px);
+            z-index: -1;
+            opacity: 0.5;
+            animation: floatBlob 15s ease-in-out infinite;
+        }
+
+        .blob-1 {
+            top: -50px; left: -50px;
+            width: 400px; height: 400px;
+            background: #8A5A44; 
+        }
+
+        .blob-2 {
+            bottom: -100px; right: -50px;
+            width: 500px; height: 500px;
+            background: #D5B4A3; 
+            animation-delay: -7s;
+            animation-direction: reverse;
+        }
+
+        @keyframes floatBlob {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(40px, -40px) scale(1.1); }
+            66% { transform: translate(-30px, 30px) scale(0.9); }
+        }
+
+        /* --- Reusable Glass Class --- */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+        }
+
+        /* --- Top Navigation --- */
+        .navbar {
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+        }
+
+        .brand-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-brown);
+            text-decoration: none;
+        }
+
+        .back-btn {
+            padding: 8px 16px;
+            background-color: transparent;
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* --- Form Container --- */
+        .form-wrapper {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .form-card {
+            width: 100%;
+            max-width: 500px;
+            padding: 40px;
+            border-radius: 24px;
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        @keyframes slideUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-header h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--primary-brown);
+            margin-bottom: 5px;
+        }
+
+        .form-header p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        /* --- Profile Photo Upload Area --- */
+        .photo-upload-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .avatar-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--white);
+            box-shadow: 0 4px 15px rgba(138, 90, 68, 0.15);
+            margin-bottom: 15px;
+            background-color: var(--primary-brown);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 2.5rem;
+            font-weight: 600;
+        }
+
+        .custom-file-upload {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            background-color: rgba(255, 255, 255, 0.7);
+            border: 1px solid var(--primary-brown);
+            color: var(--primary-brown);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .custom-file-upload:hover {
+            background-color: var(--primary-brown);
+            color: var(--white);
+        }
+
+        .custom-file-upload input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+            height: 100%;
+        }
+
+        /* --- Form Inputs --- */
+        .input-group {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+            margin-left: 5px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px 16px;
+            background-color: rgba(255, 255, 255, 0.8); /* Slightly transparent input fields */
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 1rem;
+            color: var(--text-dark);
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus {
+            border-color: var(--primary-brown);
+            background-color: var(--white);
+            box-shadow: 0 0 0 3px rgba(138, 90, 68, 0.1);
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: var(--primary-brown);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(138, 90, 68, 0.2);
+        }
+
+        .submit-btn:hover {
+            background: var(--hover-brown);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(138, 90, 68, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: scale(0.98);
+        }
+
+        @media (max-width: 600px) {
+            .form-card { padding: 30px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="blob-1"></div>
+    <div class="blob-2"></div>
+
+    <nav class="navbar glass-panel">
+        <a href="/myapp/user_dashboard/" class="brand-logo">Lefto.</a>
+        <a href="javascript:history.back()" class="back-btn">← Back</a>
+    </nav>
+
+    <div class="form-wrapper">
+        <div class="form-card glass-panel">
+            
+            <div class="form-header">
+                <h2>Your Profile</h2>
+                <p>Update your personal and delivery details.</p>
+            </div>
+
+            <form action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="photo-upload-container">
+                    {% if data.photo %}
+                        <img src="{{ data.photo.url }}" alt="Profile Photo" class="avatar-preview">
+                    {% else %}
+                        <div class="avatar-preview">{{ data.name|make_list|first|upper|default:"U" }}</div>
+                    {% endif %}
+                    
+                    <div class="custom-file-upload">
+                        <span>Change Photo</span>
+                        <input type="file" name="photo" accept="image/*">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Full Name</label>
+                    <input type="text" name="name" value="{{ data.name }}" placeholder="John Doe" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Email Address</label>
+                    <input type="email" name="email" value="{{ data.email }}" placeholder="john@example.com" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Phone Number</label>
+                    <input type="tel" name="phone" value="{{ data.phone }}" placeholder="+91 9876543210" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Delivery Address</label>
+                    <input type="text" name="address" value="{{ data.address }}" placeholder="123 Main Street" required>
+                </div>
+
+                <button type="submit" class="submit-btn">Save Changes</button>
+
+            </form>
+
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lefto | Premium Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Warm, aesthetic color palette */
+            --bg-base: #FDFBF7;
+            --primary-brown: #8A5A44;
+            --primary-hover: #6A4432;
+            --accent-cream: #EADDCF;
+            --text-dark: #2C1E16;
+            --text-muted: #7D6B61;
+            
+            /* Glassmorphism variables */
+            --glass-bg: rgba(255, 255, 255, 0.55);
+            --glass-border: rgba(255, 255, 255, 0.7);
+            --glass-shadow: 0 24px 48px rgba(138, 90, 68, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            overflow-x: hidden;
+        }
+
+        /* Layout */
+        .split-container {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        /* Left Side: Premium Image */
+        .image-section {
+            flex: 1.2;
+            /* High quality warm food image */
+            background: url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2070&auto=format&fit=crop') center/cover no-repeat;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            padding: 60px;
+            animation: fadeIn 1.5s ease-out;
+        }
+
+        .image-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(180deg, rgba(44, 30, 22, 0.1) 0%, rgba(44, 30, 22, 0.85) 100%);
+        }
+
+        .brand-text {
+            position: relative;
+            z-index: 2;
+            color: #FFFFFF;
+            max-width: 480px;
+            transform: translateY(20px);
+            animation: slideUp 1s ease-out forwards;
+            animation-delay: 0.3s;
+            opacity: 0;
+        }
+
+        .brand-text h1 {
+            font-size: 4.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            letter-spacing: -1.5px;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .brand-text h1 span {
+            color: #EADDCF; /* Soft cream dot */
+        }
+
+        .brand-text p {
+            font-size: 1.2rem;
+            font-weight: 300;
+            line-height: 1.6;
+            opacity: 0.95;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        /* Right Side: Form & Glassmorphism */
+        .form-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            background-color: var(--bg-base);
+            padding: 40px;
+            overflow: hidden;
+        }
+
+        /* Ambient background shapes for glassmorphism depth */
+        .ambient-shape-1 {
+            position: absolute;
+            top: -10%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: #F4E8DC;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 0;
+        }
+
+        .ambient-shape-2 {
+            position: absolute;
+            bottom: -5%;
+            left: -5%;
+            width: 300px;
+            height: 300px;
+            background: #EFE4DA;
+            border-radius: 50%;
+            filter: blur(60px);
+            z-index: 0;
+        }
+
+        .login-box {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 420px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            padding: 50px 40px;
+            border-radius: 28px;
+            box-shadow: var(--glass-shadow), inset 0 0 0 1px rgba(255,255,255,0.5);
+            animation: fadeInScale 0.8s ease-out forwards;
+            animation-delay: 0.1s;
+            opacity: 0;
+            transform: scale(0.96);
+        }
+
+        .login-box h2 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--text-dark);
+            letter-spacing: -0.5px;
+        }
+
+        .login-box p.subtitle {
+            color: var(--text-muted);
+            margin-bottom: 35px;
+            font-size: 0.95rem;
+            font-weight: 400;
+        }
+
+        /* Inputs with styling and icons */
+        .input-group {
+            position: relative;
+            margin-bottom: 24px;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            fill: #AFA096;
+            transition: fill 0.3s ease;
+            z-index: 2;
+        }
+
+        .login-box input {
+            width: 100%;
+            padding: 16px 16px 16px 52px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border: 1.5px solid transparent;
+            border-radius: 14px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-dark);
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+            position: relative;
+        }
+
+        .login-box input::placeholder {
+            color: #AFA096;
+            font-weight: 400;
+        }
+
+        .login-box input:focus {
+            background-color: #FFFFFF;
+            border-color: var(--primary-brown);
+            box-shadow: 0 0 0 4px rgba(138, 90, 68, 0.1), inset 0 2px 4px rgba(0,0,0,0.01);
+        }
+
+        .login-box input:focus + .input-icon,
+        .login-box input:not(:placeholder-shown) + .input-icon {
+            fill: var(--primary-brown);
+        }
+
+        /* Premium Button */
+        .login-box button {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary-brown) 0%, #A4755D 100%);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(138, 90, 68, 0.25);
+            margin-top: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-box button::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%);
+            transform: skewX(-25deg);
+            transition: all 0.7s ease;
+        }
+
+        .login-box button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(138, 90, 68, 0.35);
+            background: linear-gradient(135deg, var(--primary-hover) 0%, var(--primary-brown) 100%);
+        }
+
+        .login-box button:hover::after {
+            left: 200%;
+        }
+
+        .login-box button:active {
+            transform: translateY(1px);
+            box-shadow: 0 4px 10px rgba(138, 90, 68, 0.2);
+        }
+
+        /* Links */
+        .links-container {
+            margin-top: 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            text-align: center;
+        }
+
+        .links-container a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+            display: inline-block;
+            align-self: center;
+        }
+
+        .links-container a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            background-color: var(--primary-brown);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        .links-container a:hover {
+            color: var(--text-dark);
+        }
+
+        .links-container a:hover::after {
+            width: 100%;
+        }
+
+        /* Django Messages Overhaul */
+        .message-wrapper {
+            position: absolute;
+            top: 24px;
+            width: 100%;
+            max-width: 420px;
+            z-index: 10;
+        }
+
+        .alert {
+            padding: 16px 20px;
+            border-radius: 14px;
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.5);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            animation: slideDown 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .alert-success { color: #276749; border-left: 5px solid #48BB78; }
+        .alert-error { color: #9B2C2C; border-left: 5px solid #F56565; }
+        .alert-warning { color: #9C4221; border-left: 5px solid #ED8936; }
+
+        /* Animations */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInScale { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            body { overflow-y: auto; }
+            .split-container { flex-direction: column; }
+            .image-section { 
+                flex: none; 
+                height: 40vh; 
+                padding: 40px 24px; 
+                align-items: center; 
+                justify-content: center;
+                text-align: center;
+            }
+            .brand-text h1 { font-size: 3.5rem; }
+            .brand-text p { display: none; /* Keep mobile minimal */ }
+            .form-section { 
+                flex: none; 
+                min-height: 60vh; 
+                padding: 40px 24px; 
+                background: var(--bg-base);
+                justify-content: flex-start;
+            }
+            .login-box {
+                padding: 40px 24px;
+                background: #FFFFFF; /* Solid white for mobile readability */
+                backdrop-filter: none;
+                box-shadow: 0 10px 30px rgba(138, 90, 68, 0.05);
+                border: 1px solid rgba(138, 90, 68, 0.1);
+            }
+            .ambient-shape-1, .ambient-shape-2 { display: none; }
+            .message-wrapper { position: relative; top: 0; margin-bottom: 24px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="split-container">
+    
+    <div class="image-section">
+        <div class="image-overlay"></div>
+        <div class="brand-text">
+            <h1>Lefto<span>.</span></h1>
+            <p>Rescue delicious meals at a discount. Save money, save food.</p>
+        </div>
+    </div>
+
+    <div class="form-section">
+        <div class="ambient-shape-1"></div>
+        <div class="ambient-shape-2"></div>
+        
+        {% if messages %}
+        <div class="message-wrapper" id="django-messages">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="login-box">
+            <h2>Welcome Back</h2>
+            <p class="subtitle">Log in to find today's leftover deals.</p>
+
+            <form action="" method="post">
+                {% csrf_token %}
+                
+                <div class="input-group">
+                    <svg class="input-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                    <input type="text" placeholder="Username" name="username" required>
+                </div>
+                
+                <div class="input-group">
+                    <svg class="input-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/>
+                    </svg>
+                    <input type="password" placeholder="Password" name="password" required>
+                </div>
+
+                <button type="submit">Log In</button>
+            </form>
+
+            <div class="links-container">
+                <a href="/myapp/user_register/">Create a User Account</a>
+                <a href="/myapp/hotel_register/">Register as a Hotel Partner</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const messageBox = document.getElementById("django-messages");
+        
+        if (messageBox) {
+            // Dismiss after 4 seconds
+            setTimeout(() => {
+                messageBox.style.opacity = "0";
+                messageBox.style.transform = "translateY(-10px)";
+                
+                // Remove from DOM after fade out transition completes
+                setTimeout(() => {
+                    messageBox.remove();
+                }, 500);
+            }, 4000);
+        }
+    });
+</script>
+</body>
+</html>
