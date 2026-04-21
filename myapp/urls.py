@@ -46,6 +46,10 @@ urlpatterns = [
     path('view_leftover_order_status/',views.view_leftover_order_status),
     path('send_complaint/',views.send_complaint),
     path('view_reply/',views.view_reply),
+    path('payment_page/<id>/',views.payment_page),
+    path('payment_success/<id>/',views.payment_success),
+    path('payment_page_normal/<id>/',views.payment_page_normal),
+    path('payment_success_normal/<id>/',views.payment_success_normal),
    
 
     

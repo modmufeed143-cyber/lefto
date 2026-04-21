@@ -407,7 +407,7 @@
 
     </div>
 
-    <script>
+<script>
         const quantityInput = document.getElementById('quantityInput');
         const increaseBtn = document.getElementById('increaseBtn');
         const decreaseBtn = document.getElementById('decreaseBtn');
@@ -417,56 +417,93 @@
         const totalAmountSpan = document.getElementById('totalAmount');
         const totalSavingsSpan = document.getElementById('totalSavings');
         
-        // Grab the Django variables
-        const standardPrice = parseFloat('{{ data.FOOD.price }}');
-        const dealPrice = parseFloat('{{ data.discountprice }}');
-        const maxQuantity = parseInt('{{ data.FOOD.quantity }}');
+        // Grab the Django variables (Added fallback || 0 to prevent NaN errors)
+        const standardPrice = parseFloat('{{ data.FOOD.price }}') || 0;
+        const dealPrice = parseFloat('{{ data.discountprice }}') || 0;
+        const maxQuantity = parseInt('{{ data.FOOD.quantity }}') || 1;
         const minQuantity = 1;
 
-        function updateTotal() {
-            let quantity = parseInt(quantityInput.value) || 0;
+        // Pass the event type so we know if the user is typing or clicking away
+        function updateTotal(eventType) {
+            let rawValue = quantityInput.value.trim();
 
-            // Constrain quantity
-            if (quantity < minQuantity) quantity = minQuantity;
-            if (quantity > maxQuantity) quantity = maxQuantity;
-            quantityInput.value = quantity;
+            // 1. Allow the box to be empty while typing without forcing it to "1"
+            if (rawValue === "") {
+                if (eventType === 'change' || eventType === 'blur') {
+                    // If they click away and leave it empty, reset to 1
+                    quantityInput.value = minQuantity;
+                    rawValue = minQuantity;
+                } else {
+                    // If they are just typing/backspacing, set totals to 0 and wait
+                    updateDOM(0);
+                    return;
+                }
+            }
 
+            let quantity = parseInt(rawValue);
+
+            // Prevent weird characters
+            if (isNaN(quantity)) {
+                quantity = minQuantity;
+                quantityInput.value = quantity;
+            }
+
+            // 2. Constrain maximum immediately if they type a massive number
+            if (quantity > maxQuantity) {
+                quantity = maxQuantity;
+                quantityInput.value = quantity;
+            }
+
+            // 3. Constrain minimum ONLY when they click away (so they can safely type)
+            if (quantity < minQuantity && eventType === 'change') {
+                quantity = minQuantity;
+                quantityInput.value = quantity;
+            }
+
+            // Update the screen with the valid quantity
+            updateDOM(quantity);
+        }
+
+        function updateDOM(quantity) {
             // Calculate Totals
             const currentTotal = (quantity * dealPrice);
             const standardTotal = (quantity * standardPrice);
-            
-            // Calculate Savings! (Standard Total minus what they are actually paying)
             const savings = standardTotal - currentTotal;
 
-            // Update DOM
+            // Update Screen Text
             summaryQtySpan.textContent = quantity;
             totalAmountSpan.textContent = currentTotal.toFixed(2);
             totalSavingsSpan.textContent = savings.toFixed(2);
 
-            // Update buttons
+            // Update Buttons
             decreaseBtn.disabled = quantity <= minQuantity;
             increaseBtn.disabled = quantity >= maxQuantity;
             
-            // Prevent submission if somehow out of bounds
-            submitBtn.disabled = (quantity <= 0 || quantity > maxQuantity);
+            // Disable the Submit button if they haven't typed a valid number yet
+            submitBtn.disabled = (quantity < minQuantity || quantity > maxQuantity);
         }
 
-        // Event Listeners
+        // Event Listeners for +/- Buttons
         increaseBtn.addEventListener('click', () => {
-            quantityInput.value = parseInt(quantityInput.value) + 1;
-            updateTotal();
+            let currentVal = parseInt(quantityInput.value) || 0;
+            quantityInput.value = currentVal + 1;
+            updateTotal('btn');
         });
 
         decreaseBtn.addEventListener('click', () => {
-            quantityInput.value = parseInt(quantityInput.value) - 1;
-            updateTotal();
+            let currentVal = parseInt(quantityInput.value) || 0;
+            quantityInput.value = currentVal - 1;
+            updateTotal('btn');
         });
 
-        quantityInput.addEventListener('input', updateTotal);
-        quantityInput.addEventListener('change', updateTotal);
+        // Use 'input' for real-time calculation while they type
+        quantityInput.addEventListener('input', () => updateTotal('input'));
+        
+        // Use 'change' to snap to minimums when they click outside the text box
+        quantityInput.addEventListener('change', () => updateTotal('change'));
 
-        // Run once on load to set initial savings
-        updateTotal();
+        // Run once on page load to initialize
+        updateTotal('init');
     </script>
 
 </body>

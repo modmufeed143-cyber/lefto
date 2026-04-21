@@ -117,9 +117,41 @@ def user_register_post(request):
 
 
 
+from django.shortcuts import render
+from .models import user_table, hotel_table, complaint_table
 
 def admin_home(request):
-    return render(request,'admin/admin_home.html')
+    # 1. User Metrics
+    active_users = user_table.objects.count()
+
+    # 2. Hotel Metrics
+    total_hotels = hotel_table.objects.count()
+    pending_hotels = hotel_table.objects.filter(status='pending').count()
+    approved_hotels = hotel_table.objects.filter(status='Approved').count()
+
+    # 3. Complaint Metrics (Using 'replay' as spelled in your models)
+    total_complaints = complaint_table.objects.count()
+    open_complaints = complaint_table.objects.filter(replay='pending').count()
+    resolved_complaints = total_complaints - open_complaints
+
+    # 4. Calculate real percentages for the Health Bars
+    # (We use "if > 0 else 0" to prevent division-by-zero errors when the database is empty)
+    hotel_rate = int((approved_hotels / total_hotels * 100)) if total_hotels > 0 else 0
+    complaint_rate = int((resolved_complaints / total_complaints * 100)) if total_complaints > 0 else 0
+
+    context = {
+        'active_users': active_users,
+        'total_hotels': total_hotels,
+        'pending_hotels': pending_hotels,
+        'approved_hotels': approved_hotels,
+        'total_complaints': total_complaints,
+        'open_complaints': open_complaints,
+        'resolved_complaints': resolved_complaints,
+        'hotel_rate': hotel_rate,
+        'complaint_rate': complaint_rate,
+    }
+    
+    return render(request, 'admin/admin_home.html', context)
 
 def verify_hotel(request):
     ob=hotel_table.objects.all()
@@ -186,9 +218,37 @@ def send_reply(request,id):
 
 
 
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 
+@login_required(login_url='/myapp/login_get/')
 def hotel_home(request):
-    return render(request,'hotel/hotel_home.html')
+    # 1. Get the current logged-in hotel profile
+    try:
+        hotel = hotel_table.objects.get(LOGIN=request.user)
+    except hotel_table.DoesNotExist:
+        hotel = None
+
+    if hotel:
+        # 2. Count Active Lefto Deals for this specific hotel
+        active_deals = leftover_foodtable.objects.filter(FOOD__HOTEL=hotel, status='Active').count()
+
+        # 3. Count Pending Standard Orders (status = 'ordered')
+        pending_standard = order_table.objects.filter(FOOD__HOTEL=hotel, status='ordered').count()
+
+        # 4. Count Pending Lefto Orders (status = 'ordered')
+        pending_leftover = leftover_order_table.objects.filter(LEFT__FOOD__HOTEL=hotel, status='ordered').count()
+    else:
+        active_deals = pending_standard = pending_leftover = 0
+
+    context = {
+        'hotel': hotel,
+        'active_deals': active_deals,
+        'pending_standard': pending_standard,
+        'pending_leftover': pending_leftover,
+    }
+    
+    return render(request, 'hotel/hotel_home.html', context)
 
 def updates_profile(request):
     ob=hotel_table.objects.get(LOGIN=request.user)
@@ -297,7 +357,7 @@ def accept_order(request, id):
         if food.quantity <= 0:
             food.status='Inactive'
         food.save()
-        ob.status='Accepted'
+        ob.status='confirmed'
         ob.save()
     return redirect('/myapp/view_food_order_verify/')
     
@@ -312,19 +372,19 @@ def view_leftover_food_order_verify(request):
     return render(request,'hotel/view_leftover_food_order_verify.html',{'data':ob})
 
 def accept_leftover_order(request, id):
-    ob=leftover_foodtable.objects.get(id=id)
+    ob=leftover_order_table.objects.get(id=id)
     if ob.status != 'Accepted':
-        food=ob.FOOD
+        food=ob.LEFT.FOOD
         food.quantity=max(food.quantity - ob.quantity, 0)
         if food.quantity <= 0:
             food.status='Inactive'
         food.save()
-        ob.status='Accepted'
+        ob.status='confirmed'
         ob.save()
     return redirect('/myapp/view_leftover_food_order_verify/')
 
 def reject_leftover_order(request, id):
-    ob=leftover_foodtable.objects.get(id=id)
+    ob=leftover_order_table.objects.get(id=id)
     ob.status='Rejected'
     ob.save()
     return redirect('/myapp/view_leftover_food_order_verify/')
@@ -340,9 +400,15 @@ def reject_leftover_order(request, id):
 
 
 
-
 def user_home(request):
-    return render(request,'user/user_home.html')
+    leftover = leftover_foodtable.objects.filter(status='Active').order_by('-id')[:20]
+    normal = food_table.objects.filter(status='Active').order_by('-id')[:20]
+    user = user_table.objects.get(LOGIN=request.user)
+    return render(request, 'user/user_home.html', {
+        'leftover': leftover,
+        'normal': normal,
+        'user': user
+    })
 
 def update_profile(request):
     ob=user_table.objects.get(LOGIN=request.user)
@@ -409,6 +475,52 @@ def view_order_status(request):
     ob=order_table.objects.filter(USER__LOGIN=request.user)
     return render(request,'user/view_order_status.html',{'data':ob}) 
 
+import razorpay
+from django.shortcuts import render, redirect
+# Ensure order_table is imported
+
+# 1. Show the standard checkout page
+def payment_page_normal(request, id):
+    order_obj = order_table.objects.get(id=id)
+    
+    # Calculate Total: Standard Quantity * Standard Price
+    total_amount = order_obj.quantity * order_obj.FOOD.price
+    
+    razorpay_api_key = "rzp_test_MJOAVy77oMVaYv"
+    razorpay_secret_key = "MvUZ03MPzLq3lkvMneYECQsk"
+    razorpay_client = razorpay.Client(auth=(razorpay_api_key, razorpay_secret_key))
+
+    amount_in_paise = int(total_amount * 100)
+
+    order_data = {
+        'amount': amount_in_paise,
+        'currency': 'INR',
+        'receipt': f'std_rcpt_{order_obj.id}',
+        'payment_capture': '1',  
+    }
+
+    rzp_order = razorpay_client.order.create(data=order_data)
+
+    context = {
+        'razorpay_api_key': razorpay_api_key,
+        'amount': order_data['amount'],
+        'currency': order_data['currency'],
+        'rzp_order_id': rzp_order['id'],
+        'order': order_obj, 
+        'total_display': total_amount
+    }
+
+    return render(request, 'user/payment_page_normal.html', context)
+
+
+# 2. Update the status after Razorpay confirms success
+def payment_success_normal(request, id):
+    order_obj = order_table.objects.get(id=id)
+    order_obj.status = 'paid'  # Update standard order table
+    order_obj.save()
+    
+    return redirect('/myapp/view_order_status/')
+
 def view_leftover_food_request(request):
     ob=leftover_foodtable.objects.filter(status='Active')
     return render(request,'user/view_leftover_food_request.html',{'data':ob})
@@ -452,5 +564,47 @@ def view_reply(request):
     ob=complaint_table.objects.filter(USER=user)
     return render(request,'user/view_replies.html',{'data':ob})
 
+import razorpay
+from django.shortcuts import render, redirect
+from datetime import datetime
+
+def payment_page(request, id):
+    order_obj = leftover_order_table.objects.get(id=id)
+    
+    total_amount = order_obj.quantity * order_obj.LEFT.discountprice
+    
+    razorpay_api_key = "rzp_test_MJOAVy77oMVaYv"
+    razorpay_secret_key = "MvUZ03MPzLq3lkvMneYECQsk"
+    razorpay_client = razorpay.Client(auth=(razorpay_api_key, razorpay_secret_key))
+
+    amount_in_paise = int(total_amount * 100)
+
+    order_data = {
+        'amount': amount_in_paise,
+        'currency': 'INR',
+        'receipt': f'lefto_rcpt_{id}',
+        'payment_capture': '1',  
+    }
+
+    rzp_order = razorpay_client.order.create(data=order_data)
+
+    context = {
+        'razorpay_api_key': razorpay_api_key,
+        'amount': order_data['amount'],
+        'currency': order_data['currency'],
+        'rzp_order_id': rzp_order['id'],
+        'order': order_obj, 
+        'total_display': total_amount
+    }
+
+    return render(request, 'user/payment_page.html', context)
+
+
+def payment_success(request, id):
+    order_obj = leftover_order_table.objects.get(id=id)
+    order_obj.status = 'paid'
+    order_obj.save()
+    
+    return redirect('/myapp/view_leftover_order_status/')
                          
 

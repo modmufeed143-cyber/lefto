@@ -137,7 +137,7 @@
     <header class="topbar">
         <div class="topbar-left">
             <h1>Dashboard</h1>
-            <span>Tuesday, 07 Apr 2026 · Lefto Admin</span>
+            <span>Monday, 20 Apr 2026 · Lefto Admin</span>
         </div>
         <div class="topbar-right">
             <div class="badge-pill"><span class="dot dot-green"></span>All systems live</div>
@@ -147,20 +147,29 @@
 
     <div class="content">
         <div class="left-col">
+            
             <div class="metrics-strip">
                 <div class="metric">
                     <div class="metric-label">Hotels Pending</div>
-                    <div class="metric-value">12</div>
-                    <div class="metric-badge badge-warn">⚠ Awaiting review</div>
+                    <div class="metric-value">{{ pending_hotels }}</div>
+                    {% if pending_hotels > 0 %}
+                        <div class="metric-badge badge-warn">⚠ Awaiting review</div>
+                    {% else %}
+                        <div class="metric-badge badge-ok">✓ All caught up</div>
+                    {% endif %}
                 </div>
                 <div class="metric">
                     <div class="metric-label">Open Complaints</div>
-                    <div class="metric-value">3</div>
-                    <div class="metric-badge badge-warn">⚠ Needs action</div>
+                    <div class="metric-value">{{ open_complaints }}</div>
+                    {% if open_complaints > 0 %}
+                        <div class="metric-badge badge-warn">⚠ Needs action</div>
+                    {% else %}
+                        <div class="metric-badge badge-ok">✓ Inbox Zero</div>
+                    {% endif %}
                 </div>
                 <div class="metric">
                     <div class="metric-label">Active Users</div>
-                    <div class="metric-value">1,248</div>
+                    <div class="metric-value">{{ active_users }}</div>
                     <div class="metric-badge badge-ok">✓ Healthy</div>
                 </div>
             </div>
@@ -195,43 +204,32 @@
             <div class="panel">
                 <div class="panel-header"><h3>Platform Health</h3></div>
                 <div class="health-bar-wrap">
+                    
                     <div class="health-row">
-                        <div class="health-row-top"><strong>Hotel Verification Rate</strong><span>76%</span></div>
-                        <div class="bar-track"><div class="bar-fill green" style="width:76%"></div></div>
+                        <div class="health-row-top"><strong>Hotel Verification Rate</strong><span>{{ hotel_rate }}%</span></div>
+                        <div class="bar-track">
+                            <div class="bar-fill {% if hotel_rate > 70 %}green{% else %}warn{% endif %}" style="width:{{ hotel_rate }}%"></div>
+                        </div>
                     </div>
+                    
                     <div class="health-row">
-                        <div class="health-row-top"><strong>Complaint Resolution</strong><span>62%</span></div>
-                        <div class="bar-track"><div class="bar-fill warn" style="width:62%"></div></div>
+                        <div class="health-row-top"><strong>Complaint Resolution</strong><span>{{ complaint_rate }}%</span></div>
+                        <div class="bar-track">
+                            <div class="bar-fill {% if complaint_rate > 70 %}green{% else %}warn{% endif %}" style="width:{{ complaint_rate }}%"></div>
+                        </div>
                     </div>
-                    <div class="health-row">
-                        <div class="health-row-top"><strong>User Retention</strong><span>91%</span></div>
-                        <div class="bar-track"><div class="bar-fill green" style="width:91%"></div></div>
-                    </div>
-                    <div class="health-row">
-                        <div class="health-row-top"><strong>Uptime</strong><span>99.8%</span></div>
-                        <div class="bar-track"><div class="bar-fill green" style="width:99.8%"></div></div>
-                    </div>
-                </div>
-            </div>
 
-            <div class="panel">
-                <div class="panel-header"><h3>Recent Activity</h3><a href="#">View all</a></div>
-                <div class="activity-list">
-                    <div class="activity-item"><div class="activity-dot" style="background:#C08A3A"></div><div class="activity-body"><p>New hotel <strong>The Palm Garden</strong> submitted for review</p><span>2 minutes ago</span></div></div>
-                    <div class="activity-item"><div class="activity-dot" style="background:#5C8A68"></div><div class="activity-body"><p>User <strong>Rahul M.</strong> account verified successfully</p><span>18 minutes ago</span></div></div>
-                    <div class="activity-item"><div class="activity-dot" style="background:#C08A3A"></div><div class="activity-body"><p>Complaint #C-0042 flagged — food quality issue</p><span>1 hour ago</span></div></div>
-                    <div class="activity-item"><div class="activity-dot" style="background:#5C8A68"></div><div class="activity-body"><p><strong>Seaside Retreat Hotel</strong> approved and live</p><span>3 hours ago</span></div></div>
-                    <div class="activity-item"><div class="activity-dot" style="background:#9E8A7E"></div><div class="activity-body"><p>Password changed by admin</p><span>Yesterday</span></div></div>
                 </div>
             </div>
 
             <div class="panel">
                 <div class="panel-header"><h3>At a Glance</h3></div>
-                <div class="mini-stat"><span class="mini-stat-label">Total Hotels</span><span class="mini-stat-value">84</span></div>
-                <div class="mini-stat"><span class="mini-stat-label">Hotels Approved</span><span class="mini-stat-value">72</span></div>
-                <div class="mini-stat"><span class="mini-stat-label">Total Complaints</span><span class="mini-stat-value">19</span></div>
-                <div class="mini-stat"><span class="mini-stat-label">Resolved</span><span class="mini-stat-value">16</span></div>
+                <div class="mini-stat"><span class="mini-stat-label">Total Hotels</span><span class="mini-stat-value">{{ total_hotels }}</span></div>
+                <div class="mini-stat"><span class="mini-stat-label">Hotels Approved</span><span class="mini-stat-value">{{ approved_hotels }}</span></div>
+                <div class="mini-stat"><span class="mini-stat-label">Total Complaints</span><span class="mini-stat-value">{{ total_complaints }}</span></div>
+                <div class="mini-stat"><span class="mini-stat-label">Resolved</span><span class="mini-stat-value">{{ resolved_complaints }}</span></div>
             </div>
+            
         </div>
     </div>
 </main>

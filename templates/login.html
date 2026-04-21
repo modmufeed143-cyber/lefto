@@ -3,444 +3,356 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lefto | Premium Login</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Lefto | Rescue Meals, Save Money</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            /* Warm, aesthetic color palette */
+            /* Lefto Signature Palette */
             --bg-base: #FDFBF7;
+            --bg-secondary: #F4EFEB;
             --primary-brown: #8A5A44;
             --primary-hover: #6A4432;
             --accent-cream: #EADDCF;
             --text-dark: #2C1E16;
             --text-muted: #7D6B61;
+            --white: #FFFFFF;
             
-            /* Glassmorphism variables */
-            --glass-bg: rgba(255, 255, 255, 0.55);
-            --glass-border: rgba(255, 255, 255, 0.7);
-            --glass-shadow: 0 24px 48px rgba(138, 90, 68, 0.08);
+            /* Shadows & Glass */
+            --glass-bg: rgba(255, 255, 255, 0.25);
+            --glass-border: rgba(255, 255, 255, 0.4);
+            --glass-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            --glow-shadow: 0 8px 25px rgba(138, 90, 68, 0.25);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; scroll-behavior: smooth; }
+
+        body { background-color: var(--bg-base); color: var(--text-dark); overflow-x: hidden; }
+
+        /* --- Navigation --- */
+        .navbar {
+            position: fixed; top: 0; left: 0; width: 100%; padding: 20px 5%;
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(253, 251, 247, 0.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            z-index: 1000; border-bottom: 1px solid rgba(138, 90, 68, 0.1); transition: all 0.3s ease;
         }
 
-        body {
-            background-color: var(--bg-base);
-            color: var(--text-dark);
+        .brand-logo { font-size: 1.8rem; font-weight: 800; color: var(--primary-brown); text-decoration: none; letter-spacing: -1px; }
+        .brand-logo span { color: var(--text-dark); }
+
+        .nav-links { display: flex; gap: 30px; align-items: center; }
+        .nav-link { text-decoration: none; color: var(--text-dark); font-weight: 500; font-size: 1rem; transition: color 0.2s; }
+        .nav-link:hover { color: var(--primary-brown); }
+
+        .btn-outline {
+            padding: 10px 20px; border: 2px solid var(--primary-brown); border-radius: 12px;
+            color: var(--primary-brown); text-decoration: none; font-weight: 600; transition: all 0.3s ease;
+        }
+        .btn-outline:hover { background: var(--primary-brown); color: var(--white); }
+
+        /* --- Hero Section (Landing + Login) --- */
+        .hero {
             min-height: 100vh;
             display: flex;
-            overflow-x: hidden;
-        }
-
-        /* Layout */
-        .split-container {
-            display: flex;
-            width: 100%;
-            min-height: 100vh;
-        }
-
-        /* Left Side: Premium Image */
-        .image-section {
-            flex: 1.2;
-            /* High quality warm food image */
+            align-items: center;
+            justify-content: space-between;
+            padding: 100px 5% 40px;
+            position: relative;
             background: url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2070&auto=format&fit=crop') center/cover no-repeat;
-            position: relative;
-            display: flex;
-            align-items: flex-end;
-            padding: 60px;
-            animation: fadeIn 1.5s ease-out;
         }
 
-        .image-overlay {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(180deg, rgba(44, 30, 22, 0.1) 0%, rgba(44, 30, 22, 0.85) 100%);
-        }
+        
 
-        .brand-text {
-            position: relative;
-            z-index: 2;
-            color: #FFFFFF;
-            max-width: 480px;
-            transform: translateY(20px);
-            animation: slideUp 1s ease-out forwards;
-            animation-delay: 0.3s;
-            opacity: 0;
-        }
-
-        .brand-text h1 {
-            font-size: 4.5rem;
-            font-weight: 700;
-            margin-bottom: 5px;
-            letter-spacing: -1.5px;
-            text-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
-
-        .brand-text h1 span {
-            color: #EADDCF; /* Soft cream dot */
-        }
-
-        .brand-text p {
-            font-size: 1.2rem;
-            font-weight: 300;
-            line-height: 1.6;
-            opacity: 0.95;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
-        }
-
-        /* Right Side: Form & Glassmorphism */
-        .form-section {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            background-color: var(--bg-base);
-            padding: 40px;
-            overflow: hidden;
-        }
-
-        /* Ambient background shapes for glassmorphism depth */
-        .ambient-shape-1 {
-            position: absolute;
-            top: -10%;
-            right: -10%;
-            width: 400px;
-            height: 400px;
-            background: #F4E8DC;
-            border-radius: 50%;
-            filter: blur(80px);
-            z-index: 0;
-        }
-
-        .ambient-shape-2 {
-            position: absolute;
-            bottom: -5%;
-            left: -5%;
-            width: 300px;
-            height: 300px;
-            background: #EFE4DA;
-            border-radius: 50%;
-            filter: blur(60px);
-            z-index: 0;
-        }
-
-        .login-box {
-            position: relative;
+        .hero::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(90deg, rgba(44, 30, 22, 0.95) 0%, rgba(44, 30, 22, 0.8) 50%, rgba(44, 30, 22, 0.4) 100%);
             z-index: 1;
-            width: 100%;
-            max-width: 420px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            padding: 50px 40px;
-            border-radius: 28px;
-            box-shadow: var(--glass-shadow), inset 0 0 0 1px rgba(255,255,255,0.5);
-            animation: fadeInScale 0.8s ease-out forwards;
-            animation-delay: 0.1s;
+        }
+
+        .hero-content {
+            position: relative; z-index: 2; color: var(--white); max-width: 600px;
+            animation: slideRightFade 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .badge { display: inline-block; padding: 8px 16px; background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3); border-radius: 20px; font-size: 0.85rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px; color: var(--accent-cream); }
+
+        .hero-content h1 { font-size: 4.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 20px; letter-spacing: -1.5px; }
+        .hero-content h1 span { color: var(--primary-brown); }
+        .hero-content p { font-size: 1.25rem; font-weight: 300; line-height: 1.6; color: rgba(255,255,255,0.85); margin-bottom: 40px; }
+
+        /* --- Glassmorphism Login Box --- */
+        .hero-login {
+            position: relative; z-index: 2; width: 100%; max-width: 420px;
+            background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.5); padding: 40px; border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            /* Fixed missing animation! */
             opacity: 0;
-            transform: scale(0.96);
+            animation: slideUpFade 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; 
+            animation-delay: 0.2s; 
         }
 
-        .login-box h2 {
-            font-size: 2.2rem;
-            font-weight: 600;
-            margin-bottom: 5px;
-            color: var(--text-dark);
-            letter-spacing: -0.5px;
+        .login-header { margin-bottom: 30px; text-align: center; }
+        .login-header h2 { font-size: 2rem; font-weight: 700; color: var(--text-dark); margin-bottom: 8px; letter-spacing: -0.5px; }
+        .login-header p { color: var(--text-muted); font-size: 0.95rem; }
+
+        .input-group { position: relative; margin-bottom: 20px; }
+        .input-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); width: 22px; height: 22px; color: #AFA096; transition: color 0.3s ease; pointer-events: none; }
+        
+        .input-group input { width: 100%; padding: 16px 16px 16px 54px; background-color: var(--bg-secondary); border: 2px solid transparent; border-radius: 14px; font-size: 1rem; font-weight: 500; color: var(--text-dark); outline: none; transition: all 0.3s ease; }
+        .input-group input::placeholder { color: #AFA096; font-weight: 400; }
+        .input-group input:focus { background-color: var(--white); border-color: var(--primary-brown); box-shadow: 0 4px 15px rgba(138, 90, 68, 0.08); }
+        .input-group input:focus + .input-icon, .input-group input:not(:placeholder-shown) + .input-icon { color: var(--primary-brown); }
+
+        .btn-submit { width: 100%; padding: 16px; background-color: var(--primary-brown); color: var(--white); border: none; border-radius: 14px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: var(--glow-shadow); margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .btn-submit:hover { background-color: var(--primary-hover); transform: translateY(-3px); box-shadow: 0 12px 30px rgba(138, 90, 68, 0.3); }
+        .btn-submit:active { transform: translateY(1px); }
+
+        /* --- Sections --- */
+        .section { padding: 100px 5%; background-color: var(--bg-base); }
+        .section-alt { background-color: var(--bg-secondary); }
+
+        .section-header { text-align: center; margin-bottom: 60px; max-width: 700px; margin-inline: auto; }
+        .section-header h2 { font-size: 3rem; font-weight: 700; color: var(--text-dark); margin-bottom: 15px; letter-spacing: -1px; }
+        .section-header p { font-size: 1.15rem; color: var(--text-muted); line-height: 1.6; }
+
+        /* --- Features Grid --- */
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; }
+        .feature-card { background: var(--white); padding: 40px 30px; border-radius: 24px; text-align: center; transition: all 0.4s ease; border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(138, 90, 68, 0.03); }
+        .feature-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(138, 90, 68, 0.08); border-color: rgba(138, 90, 68, 0.3); }
+        
+        .feature-icon { width: 70px; height: 70px; margin: 0 auto 25px; background: rgba(138, 90, 68, 0.1); color: var(--primary-brown); border-radius: 20px; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; }
+        .feature-card:hover .feature-icon { background: var(--primary-brown); color: var(--white); transform: scale(1.1) rotate(5deg); }
+        .feature-icon svg { width: 32px; height: 32px; stroke: currentColor; stroke-width: 2; fill: none; }
+
+        .feature-card h3 { font-size: 1.5rem; font-weight: 700; margin-bottom: 15px; color: var(--text-dark); }
+        .feature-card p { font-size: 1.05rem; color: var(--text-muted); line-height: 1.5; }
+
+        /* --- Split Info Section --- */
+        .info-split { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+        .info-img { width: 100%; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); transform: rotate(-2deg); transition: transform 0.5s ease; }
+        .info-img:hover { transform: rotate(0deg) scale(1.02); }
+        
+        .info-content h2 { font-size: 2.8rem; font-weight: 700; margin-bottom: 20px; line-height: 1.1; letter-spacing: -1px; }
+        .info-content p { font-size: 1.15rem; color: var(--text-muted); margin-bottom: 30px; line-height: 1.6; }
+        .info-list { list-style: none; display: flex; flex-direction: column; gap: 15px; margin-bottom: 40px; }
+        .info-list li { display: flex; align-items: center; gap: 15px; font-size: 1.1rem; font-weight: 500; color: var(--text-dark); }
+        .info-list li svg { color: #388E3C; width: 24px; height: 24px; }
+
+        /* --- Footer --- */
+        .footer { background-color: var(--text-dark); color: var(--bg-secondary); padding: 60px 5% 30px; }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px; margin-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 40px; }
+        .footer-brand h2 { font-size: 2rem; color: var(--white); margin-bottom: 15px; }
+        .footer-brand p { color: rgba(255,255,255,0.6); line-height: 1.6; max-width: 300px; }
+        .footer-links h4 { color: var(--white); margin-bottom: 20px; font-size: 1.1rem; }
+        .footer-links ul { list-style: none; }
+        .footer-links ul li { margin-bottom: 12px; }
+        .footer-links ul a { color: rgba(255,255,255,0.6); text-decoration: none; transition: color 0.2s; }
+        .footer-links ul a:hover { color: var(--primary-brown); }
+        .footer-bottom { text-align: center; color: rgba(255,255,255,0.4); font-size: 0.9rem; }
+
+        /* --- Django Messages (Toast) --- */
+        .message-wrapper { position: fixed; top: 90px; right: 40px; z-index: 1100; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+        .alert { padding: 16px 24px; border-radius: 12px; font-size: 0.95rem; font-weight: 600; box-shadow: 0 10px 30px rgba(0,0,0,0.1); background: var(--white); display: flex; align-items: center; gap: 10px; animation: toastSlideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; pointer-events: auto; }
+        .alert-success { color: #276749; border-left: 4px solid #48BB78; }
+        .alert-error { color: #9B2C2C; border-left: 4px solid #F56565; }
+
+        /* --- KEYFRAME ANIMATIONS (ADDED) --- */
+        @keyframes slideUpFade { 
+            from { opacity: 0; transform: translateY(40px); } 
+            to { opacity: 1; transform: translateY(0); } 
         }
-
-        .login-box p.subtitle {
-            color: var(--text-muted);
-            margin-bottom: 35px;
-            font-size: 0.95rem;
-            font-weight: 400;
+        @keyframes toastSlideIn { 
+            from { opacity: 0; transform: translateX(50px); } 
+            to { opacity: 1; transform: translateX(0); } 
         }
-
-        /* Inputs with styling and icons */
-        .input-group {
-            position: relative;
-            margin-bottom: 24px;
+        @keyframes slideRightFade { 
+            from { opacity: 0; transform: translateX(-50px); } 
+            to { opacity: 1; transform: translateX(0); } 
         }
-
-        .input-icon {
-            position: absolute;
-            left: 18px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 20px;
-            height: 20px;
-            fill: #AFA096;
-            transition: fill 0.3s ease;
-            z-index: 2;
-        }
-
-        .login-box input {
-            width: 100%;
-            padding: 16px 16px 16px 52px;
-            background-color: rgba(255, 255, 255, 0.7);
-            border: 1.5px solid transparent;
-            border-radius: 14px;
-            font-size: 0.95rem;
-            font-weight: 500;
-            color: var(--text-dark);
-            outline: none;
-            transition: all 0.3s ease;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
-            position: relative;
-        }
-
-        .login-box input::placeholder {
-            color: #AFA096;
-            font-weight: 400;
-        }
-
-        .login-box input:focus {
-            background-color: #FFFFFF;
-            border-color: var(--primary-brown);
-            box-shadow: 0 0 0 4px rgba(138, 90, 68, 0.1), inset 0 2px 4px rgba(0,0,0,0.01);
-        }
-
-        .login-box input:focus + .input-icon,
-        .login-box input:not(:placeholder-shown) + .input-icon {
-            fill: var(--primary-brown);
-        }
-
-        /* Premium Button */
-        .login-box button {
-            width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, var(--primary-brown) 0%, #A4755D 100%);
-            color: white;
-            border: none;
-            border-radius: 14px;
-            font-size: 1.05rem;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 20px rgba(138, 90, 68, 0.25);
-            margin-top: 8px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .login-box button::after {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%; width: 50%; height: 100%;
-            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%);
-            transform: skewX(-25deg);
-            transition: all 0.7s ease;
-        }
-
-        .login-box button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 25px rgba(138, 90, 68, 0.35);
-            background: linear-gradient(135deg, var(--primary-hover) 0%, var(--primary-brown) 100%);
-        }
-
-        .login-box button:hover::after {
-            left: 200%;
-        }
-
-        .login-box button:active {
-            transform: translateY(1px);
-            box-shadow: 0 4px 10px rgba(138, 90, 68, 0.2);
-        }
-
-        /* Links */
-        .links-container {
-            margin-top: 32px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            text-align: center;
-        }
-
-        .links-container a {
-            text-decoration: none;
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            font-weight: 500;
-            transition: color 0.3s ease;
-            position: relative;
-            display: inline-block;
-            align-self: center;
-        }
-
-        .links-container a::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -4px;
-            left: 50%;
-            background-color: var(--primary-brown);
-            transition: all 0.3s ease;
-            transform: translateX(-50%);
-            border-radius: 2px;
-        }
-
-        .links-container a:hover {
-            color: var(--text-dark);
-        }
-
-        .links-container a:hover::after {
-            width: 100%;
-        }
-
-        /* Django Messages Overhaul */
-        .message-wrapper {
-            position: absolute;
-            top: 24px;
-            width: 100%;
-            max-width: 420px;
-            z-index: 10;
-        }
-
-        .alert {
-            padding: 16px 20px;
-            border-radius: 14px;
-            margin-bottom: 12px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-            display: flex;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255,255,255,0.5);
-            transition: opacity 0.5s ease, transform 0.5s ease;
-            animation: slideDown 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .alert-success { color: #276749; border-left: 5px solid #48BB78; }
-        .alert-error { color: #9B2C2C; border-left: 5px solid #F56565; }
-        .alert-warning { color: #9C4221; border-left: 5px solid #ED8936; }
-
-        /* Animations */
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeInScale { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
-        @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
 
         /* Responsive */
-        @media (max-width: 900px) {
-            body { overflow-y: auto; }
-            .split-container { flex-direction: column; }
-            .image-section { 
-                flex: none; 
-                height: 40vh; 
-                padding: 40px 24px; 
-                align-items: center; 
-                justify-content: center;
-                text-align: center;
-            }
-            .brand-text h1 { font-size: 3.5rem; }
-            .brand-text p { display: none; /* Keep mobile minimal */ }
-            .form-section { 
-                flex: none; 
-                min-height: 60vh; 
-                padding: 40px 24px; 
-                background: var(--bg-base);
-                justify-content: flex-start;
-            }
-            .login-box {
-                padding: 40px 24px;
-                background: #FFFFFF; /* Solid white for mobile readability */
-                backdrop-filter: none;
-                box-shadow: 0 10px 30px rgba(138, 90, 68, 0.05);
-                border: 1px solid rgba(138, 90, 68, 0.1);
-            }
-            .ambient-shape-1, .ambient-shape-2 { display: none; }
-            .message-wrapper { position: relative; top: 0; margin-bottom: 24px; }
+        @media (max-width: 990px) {
+            .hero { flex-direction: column; text-align: center; justify-content: center; gap: 50px; padding-top: 120px; }
+            .hero::before { background: rgba(44, 30, 22, 0.85); }
+            .hero-content { align-items: center; display: flex; flex-direction: column; }
+            .hero-content h1 { font-size: 3.5rem; }
+            .nav-links { display: none; } 
+            .info-split { grid-template-columns: 1fr; }
+            .footer-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-<div class="split-container">
-    
-    <div class="image-section">
-        <div class="image-overlay"></div>
-        <div class="brand-text">
-            <h1>Lefto<span>.</span></h1>
-            <p>Rescue delicious meals at a discount. Save money, save food.</p>
-        </div>
+    {% if messages %}
+    <div class="message-wrapper" id="django-messages">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
     </div>
+    {% endif %}
 
-    <div class="form-section">
-        <div class="ambient-shape-1"></div>
-        <div class="ambient-shape-2"></div>
-        
-        {% if messages %}
-        <div class="message-wrapper" id="django-messages">
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
+    <nav class="navbar">
+        <a href="#" class="brand-logo">Lefto<span>.</span></a>
+        <div class="nav-links">
+            <a href="#how-it-works" class="nav-link">How it Works</a>
+            <a href="#partner" class="nav-link">For Restaurants</a>
+            <a href="/myapp/user_register/" class="btn-outline">Sign Up</a>
         </div>
-        {% endif %}
+    </nav>
 
-        <div class="login-box">
-            <h2>Welcome Back</h2>
-            <p class="subtitle">Log in to find today's leftover deals.</p>
+    <section class="hero">
+        <div class="hero-content">
+            <span class="badge">A Smarter Way to Eat</span>
+            <h1>Rescue meals.<br>Save <span>money.</span><br>Reduce waste.</h1>
+            <p>Connect with premium hotels and restaurants to claim perfectly good, untouched surplus food at incredible discounts.</p>
+            <div style="display:flex; gap:15px; margin-top: 20px;">
+                <a href="#how-it-works" style="color:white; text-decoration:none; font-weight:600; display:flex; align-items:center; gap:8px; opacity:0.8; transition:opacity 0.3s;">
+                    Discover How <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+                </a>
+            </div>
+        </div>
+
+        <div class="hero-login">
+            <div class="login-header">
+                <h2>Welcome Back</h2>
+                <p>Log in to access today's fresh deals.</p>
+            </div>
 
             <form action="" method="post">
                 {% csrf_token %}
                 
                 <div class="input-group">
-                    <svg class="input-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
                     </svg>
                     <input type="text" placeholder="Username" name="username" required>
                 </div>
                 
                 <div class="input-group">
-                    <svg class="input-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/>
+                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                     </svg>
                     <input type="password" placeholder="Password" name="password" required>
                 </div>
 
-                <button type="submit">Log In</button>
+                <button type="submit" class="btn-submit">
+                    Sign In To Your Account
+                </button>
             </form>
 
-            <div class="links-container">
-                <a href="/myapp/user_register/">Create a User Account</a>
-                <a href="/myapp/hotel_register/">Register as a Hotel Partner</a>
+            <div style="margin-top: 25px; text-align: center;">
+                <p style="color: var(--text-muted); font-size: 0.9rem;">
+                    Don't have an account? <a href="/myapp/user_register/" style="color: var(--primary-brown); font-weight: 600; text-decoration: none;">Create one</a>
+                </p>
             </div>
         </div>
-    </div>
+    </section>
 
-</div>
+    <section class="section" id="how-it-works">
+        <div class="section-header">
+            <h2>How Lefto Works</h2>
+            <p>Saving money and the planet is as easy as 1-2-3.</p>
+        </div>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const messageBox = document.getElementById("django-messages");
-        
-        if (messageBox) {
-            // Dismiss after 4 seconds
-            setTimeout(() => {
-                messageBox.style.opacity = "0";
-                messageBox.style.transform = "translateY(-10px)";
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </div>
+                <h3>1. Browse Deals</h3>
+                <p>Hotels post their high-quality surplus food at the end of the day or after events at a steep discount.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+                </div>
+                <h3>2. Claim & Pay</h3>
+                <p>Select the quantity you want, claim the deal, and pay securely online via Razorpay to reserve your food.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                </div>
+                <h3>3. Pick Up & Enjoy</h3>
+                <p>Head to the hotel at the designated time, show your order confirmation, and enjoy a premium meal!</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section section-alt" id="partner">
+        <div class="info-split">
+            <img src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?q=80&w=1000&auto=format&fit=crop" alt="Chef preparing food" class="info-img">
+            
+            <div class="info-content">
+                <h2>Are you a Hotel or Restaurant Owner?</h2>
+                <p>Don't throw away perfectly good food and lost revenue. Partner with Lefto to turn your daily surplus into profit while helping the environment.</p>
                 
-                // Remove from DOM after fade out transition completes
-                setTimeout(() => {
-                    messageBox.remove();
-                }, 500);
-            }, 4000);
-        }
-    });
-</script>
+                <ul class="info-list">
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Recover lost food costs</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Reach thousands of new local customers</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Reduce your carbon footprint</li>
+                </ul>
+
+                <a href="/myapp/hotel_register/" class="btn-submit" style="width: auto; display: inline-flex; padding: 15px 30px;">
+                    Register Your Business Today
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <h2>Lefto.</h2>
+                <p>Our mission is to ensure no good food goes to waste. Connecting hungry users with premium hotel surplus.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#how-it-works">How it works</a></li>
+                    <li><a href="/myapp/user_register/">Sign Up as User</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Partners</h4>
+                <ul>
+                    <li><a href="#partner">Why Join Us</a></li>
+                    <li><a href="/myapp/hotel_register/">Partner Registration</a></li>
+                    <li><a href="#">Admin Login</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Lefto Platform. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const messageBox = document.getElementById("django-messages");
+            if (messageBox) {
+                const alerts = messageBox.querySelectorAll('.alert');
+                alerts.forEach((alert, index) => {
+                    setTimeout(() => {
+                        alert.style.opacity = "0";
+                        alert.style.transform = "translateX(50px)";
+                        setTimeout(() => {
+                            alert.remove();
+                            if(messageBox.children.length === 0) messageBox.remove();
+                        }, 500);
+                    }, 4000 + (index * 500));
+                });
+            }
+        });
+    </script>
 </body>
 </html>
