@@ -13,6 +13,8 @@ from django.contrib.auth.hashers import check_password
 from django.contrib.auth import logout
 from django.forms import EmailField
 from django.core.mail import EmailMessage
+from django.contrib.auth.decorators import login_required
+from .models import user_table, hotel_table, complaint_table
 
 # Create your views here.
 def login_get(request):
@@ -117,25 +119,20 @@ def user_register_post(request):
 
 
 
-from django.shortcuts import render
-from .models import user_table, hotel_table, complaint_table
+
 
 def admin_home(request):
-    # 1. User Metrics
+    
     active_users = user_table.objects.count()
 
-    # 2. Hotel Metrics
     total_hotels = hotel_table.objects.count()
     pending_hotels = hotel_table.objects.filter(status='pending').count()
     approved_hotels = hotel_table.objects.filter(status='Approved').count()
 
-    # 3. Complaint Metrics (Using 'replay' as spelled in your models)
     total_complaints = complaint_table.objects.count()
     open_complaints = complaint_table.objects.filter(replay='pending').count()
     resolved_complaints = total_complaints - open_complaints
 
-    # 4. Calculate real percentages for the Health Bars
-    # (We use "if > 0 else 0" to prevent division-by-zero errors when the database is empty)
     hotel_rate = int((approved_hotels / total_hotels * 100)) if total_hotels > 0 else 0
     complaint_rate = int((resolved_complaints / total_complaints * 100)) if total_complaints > 0 else 0
 
@@ -218,25 +215,19 @@ def send_reply(request,id):
 
 
 
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
 
 @login_required(login_url='/myapp/login_get/')
 def hotel_home(request):
-    # 1. Get the current logged-in hotel profile
     try:
         hotel = hotel_table.objects.get(LOGIN=request.user)
     except hotel_table.DoesNotExist:
         hotel = None
 
     if hotel:
-        # 2. Count Active Lefto Deals for this specific hotel
         active_deals = leftover_foodtable.objects.filter(FOOD__HOTEL=hotel, status='Active').count()
 
-        # 3. Count Pending Standard Orders (status = 'ordered')
         pending_standard = order_table.objects.filter(FOOD__HOTEL=hotel, status='ordered').count()
 
-        # 4. Count Pending Lefto Orders (status = 'ordered')
         pending_leftover = leftover_order_table.objects.filter(LEFT__FOOD__HOTEL=hotel, status='ordered').count()
     else:
         active_deals = pending_standard = pending_leftover = 0
@@ -477,13 +468,10 @@ def view_order_status(request):
 
 import razorpay
 from django.shortcuts import render, redirect
-# Ensure order_table is imported
 
-# 1. Show the standard checkout page
 def payment_page_normal(request, id):
     order_obj = order_table.objects.get(id=id)
     
-    # Calculate Total: Standard Quantity * Standard Price
     total_amount = order_obj.quantity * order_obj.FOOD.price
     
     razorpay_api_key = "rzp_test_MJOAVy77oMVaYv"
@@ -513,7 +501,6 @@ def payment_page_normal(request, id):
     return render(request, 'user/payment_page_normal.html', context)
 
 
-# 2. Update the status after Razorpay confirms success
 def payment_success_normal(request, id):
     order_obj = order_table.objects.get(id=id)
     order_obj.status = 'paid'  # Update standard order table
@@ -582,7 +569,7 @@ def payment_page(request, id):
     order_data = {
         'amount': amount_in_paise,
         'currency': 'INR',
-        'receipt': f'lefto_rcpt_{id}',
+        'receipt': f'lefto_rcpt_{id}',   
         'payment_capture': '1',  
     }
 
